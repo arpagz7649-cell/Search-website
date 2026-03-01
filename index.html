@@ -3,211 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEAD HAND - MINIMALIST RADAR</title>
+    <title>DEAD HAND - PRO UPGRADE</title>
     <style>
-        /* TEMA GELAP TOTAL - MINIMALIS SAKTI */
-        body {
-            background-color: #000000; /* Hitam pekat agar tidak putih doang */
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
+        /* TEMA DASAR HITAM */
+        :root { --utama: #ff0000; --aksen: #8000ff; } /* Default Merah & Ungu */
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
 
-        /* EFEK TEKS MERAH MENYALA SEPERTI FOTO */
-        .brand {
-            color: #ff0000;
-            font-size: 45px;
-            font-weight: bold;
-            letter-spacing: 12px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
-        }
+        /* HEADER & AVATAR */
+        .header-radar { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid #222; }
+        .avatar { width: 50px; height: 50px; background: var(--utama); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #000; box-shadow: 0 0 15px var(--utama); }
 
-        .sub-brand {
-            color: #888;
-            font-size: 10px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            margin-bottom: 50px;
-        }
+        /* FORM STYLING */
+        .layar { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; }
+        .box-input { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
+        input { background: #111; border: 1px solid #333; border-bottom: 2px solid var(--utama); color: #fff; padding: 12px; outline: none; }
+        button { background: var(--utama); color: #fff; border: none; padding: 15px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
-        /* CONTAINER FORM RAPI */
-        .container {
-            width: 100%;
-            max-width: 350px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        /* GRID VIDEO UPGRADE */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 20px; width: 100%; }
+        .video-card { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; }
+        .video-card:hover { transform: translateY(-5px); border-color: var(--utama); }
+        .thumbnail-placeholder { width: 100%; height: 100px; background: var(--aksen); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .video-info { padding: 10px; font-size: 13px; }
 
-        /* DESAIN INPUT MINIMALIS */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        label {
-            color: #555;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding-left: 2px;
-        }
-
-        input {
-            background-color: transparent;
-            border: 1px solid #222;
-            border-bottom: 2px solid #ff0000;
-            color: white;
-            padding: 12px;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border: 1px solid #444;
-            border-bottom: 2px solid #ffffff;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
-        }
-
-        /* TOMBOL MERAH SANGAR */
-        .btn-main {
-            background-color: #ff0000;
-            color: white;
-            border: none;
-            padding: 15px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-
-        .btn-main:hover {
-            background-color: #cc0000;
-            transform: scale(1.02);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: #ff0000;
-            border: 1px solid #ff0000;
-            padding: 12px;
-            font-size: 12px;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        /* TEKS BAWAH */
-        .footer-note {
-            margin-top: 40px;
-            color: #333;
-            font-size: 11px;
-            letter-spacing: 2px;
-        }
-
-        .hidden { display: none; }
+        /* PANEL CUSTOM WARNA */
+        .color-panel { padding: 20px; background: #0a0a0a; border: 1px solid #222; margin: 20px; border-radius: 10px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="brand">DEAD HAND</div>
-    <div class="sub-brand">3D CAPSA ROULETTE SYSTEM</div>
-
-    <div class="container" id="box-register">
-        <div class="input-group">
-            <label>Username</label>
-            <input type="text" id="reg-user" placeholder="Nama Akun...">
+    <div id="layar-reg" class="layar">
+        <h1 style="color: var(--utama); letter-spacing: 10px;">DEAD HAND</h1>
+        <div class="box-input">
+            <input type="text" id="reg-user" placeholder="Username">
+            <input type="text" id="reg-asli" placeholder="Nama Asli">
+            <input type="password" id="reg-pass" placeholder="Password (Wajib)">
+            <input type="email" id="reg-email" placeholder="Email (Opsional)">
+            <button onclick="prosesDaftar()">INISIALISASI & MASUK</button>
         </div>
-
-        <div class="input-group">
-            <label>Nama Asli</label>
-            <input type="text" id="reg-asli" placeholder="Nama Lengkap Anda...">
-        </div>
-
-        <div class="input-group">
-            <label>Password (Wajib Dijawab)</label>
-            <input type="password" id="reg-pass" placeholder="Kunci Rahasia...">
-        </div>
-
-        <div class="input-group">
-            <label>Email (Terserah Mau Isi Atau Tidak)</label>
-            <input type="email" id="reg-email" placeholder="Email Opsional...">
-        </div>
-
-        <button class="btn-main" onclick="simpanKeBrankas()">BUAT RUANGAN</button>
-        <button class="btn-outline" onclick="pindahKeLogin()">GABUNG RUANGAN</button>
-        
-        <div class="footer-note">Siapkan mentalmu...</div>
     </div>
 
-    <div class="container hidden" id="box-login">
-        <div class="input-group">
-            <label>Username</label>
-            <input type="text" id="login-user">
+    <div id="layar-radar" class="hidden">
+        <div class="header-radar">
+            <div>
+                <h2 id="judul-pilot" style="margin:0; font-size: 18px;">PILOT: -</h2>
+                <small style="color: #555;">SISTEM RADAR AKTIF</small>
+            </div>
+            <div id="user-avatar" class="avatar">?</div>
         </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="login-pass">
+
+        <div class="color-panel">
+            <label style="font-size: 12px; color: #888;">CUSTOM TEMA WARNA:</label>
+            <input type="color" id="color-picker" onchange="gantiWarna(this.value)" value="#ff0000">
         </div>
-        <button class="btn-main" onclick="masukSistem()">MASUK KE RADAR</button>
-        <button class="btn-outline" onclick="location.reload()">KEMBALI</button>
+
+        <div style="padding: 0 20px;">
+            <button onclick="uploadBaru()" style="width: 100%; border-radius: 5px;">+ UPLOAD DATA VIDEO</button>
+        </div>
+
+        <div id="list-video" class="video-grid">
+            </div>
     </div>
 
     <script>
-        // Mengambil data lama agar tetap ingat walau di-refresh
-        let database = JSON.parse(localStorage.getItem('brankas_pilot')) || [];
+        let dbUser = JSON.parse(localStorage.getItem('deadhand_pro_users')) || [];
+        let dbVideo = JSON.parse(localStorage.getItem('deadhand_pro_vids')) || [];
+        let userSekarang = null;
 
-        function simpanKeBrankas() {
-            let user = document.getElementById('reg-user').value;
-            let asli = document.getElementById('reg-asli').value;
-            let pass = document.getElementById('reg-pass').value;
-            let mail = document.getElementById('reg-email').value;
+        // 1. AUTO-LOGIN SETELAH DAFTAR
+        function prosesDaftar() {
+            let u = document.getElementById('reg-user').value;
+            let n = document.getElementById('reg-asli').value;
+            let p = document.getElementById('reg-pass').value;
+            let e = document.getElementById('reg-email').value;
 
-            if(user && asli && pass) {
-                database.push({
-                    username: user,
-                    namaAsli: asli,
-                    password: pass,
-                    email: mail
-                });
-                localStorage.setItem('brankas_pilot', JSON.stringify(database));
-                alert("Identitas Terkunci di Brankas!");
-                pindahKeLogin();
-            } else {
-                alert("Username, Nama Asli, dan Password HARUS dijawab!");
+            if(u && n && p) {
+                let data = { username: u, nama: n, pass: p, email: e, warna: '#ff0000' };
+                dbUser.push(data);
+                localStorage.setItem('deadhand_pro_users', JSON.stringify(dbUser));
+                
+                // LANGSUNG MASUK (AUTO-LOGIN)
+                masukSistem(data);
+            } else { alert("Lengkapi data!"); }
+        }
+
+        function masukSistem(data) {
+            userSekarang = data;
+            document.getElementById('layar-reg').classList.add('hidden');
+            document.getElementById('layar-radar').classList.remove('hidden');
+            
+            // SET NAMA & AVATAR (HURUF DEPAN)
+            document.getElementById('judul-pilot').innerText = "PILOT: " + data.nama.toUpperCase();
+            document.getElementById('user-avatar').innerText = data.nama.charAt(0).toUpperCase();
+            
+            muatVideo();
+        }
+
+        // 2. CUSTOM WARNA
+        function gantiWarna(warna) {
+            document.documentElement.style.setProperty('--utama', warna);
+            document.getElementById('user-avatar').style.boxShadow = `0 0 15px ${warna}`;
+        }
+
+        // 3. UPLOAD & MEMORI VIDEO
+        function uploadBaru() {
+            let j = prompt("Judul Video:");
+            let l = prompt("Link Video (URL):");
+            if(j && l) {
+                dbVideo.push({ pemilik: userSekarang.username, judul: j, link: l });
+                localStorage.setItem('deadhand_pro_vids', JSON.stringify(dbVideo));
+                muatVideo();
             }
         }
 
-        function pindahKeLogin() {
-            document.getElementById('box-register').classList.add('hidden');
-            document.getElementById('box-login').classList.remove('hidden');
-        }
+        function muatVideo() {
+            let wadah = document.getElementById('list-video');
+            wadah.innerHTML = "";
+            let filtered = dbVideo.filter(v => v.pemilik === userSekarang.username);
 
-        function masukSistem() {
-            let u = document.getElementById('login-user').value;
-            let p = document.getElementById('login-pass').value;
-            let ketemu = database.find(x => x.username === u && x.password === p);
-
-            if(ketemu) {
-                alert("Selamat Datang Pilot " + ketemu.namaAsli);
-                // Di sini nanti kita panggil fungsi memori video lama kamu
-            } else {
-                alert("Akses Ditolak!");
-            }
+            filtered.forEach(v => {
+                wadah.innerHTML += `
+                    <div class="video-card" onclick="window.open('${v.link}', '_blank')">
+                        <div class="thumbnail-placeholder">${v.judul.charAt(0).toUpperCase()}</div>
+                        <div class="video-info">
+                            <b>${v.judul}</b><br>
+                            <small style="color:var(--utama)">KLIK UNTUK NONTON</small>
+                        </div>
+                    </div>
+                `;
+            });
         }
     </script>
-
 </body>
 </html>
