@@ -1,45 +1,32 @@
-// 1. Fungsi Munculin Form Register
-function tampilForm() {
-    document.getElementById('form-register').classList.toggle('hidden');
-}
-
-// 2. Fungsi Daftar (Simpan ke Memori HP)
-function daftar() {
-    let nama = document.getElementById('input-nama').value;
-    if(nama !== "") {
-        localStorage.setItem("nama_user", nama);
-        alert("Pendaftaran Berhasil!");
-        location.reload(); // Refresh halaman biar nama berubah
+function pindahKe(tujuan) {
+    document.getElementById('pintu-pilihan').classList.add('hidden');
+    if(tujuan === 'nonton') {
+        document.getElementById('search-section').classList.remove('hidden');
+    } else {
+        document.getElementById('form-upload').classList.remove('hidden');
     }
 }
 
-// 3. Cek Nama User & Ambil Data JSON
-async function jalankanAplikasi() {
-    // Tampilkan Nama kalau sudah Daftar
-    let userTerdaftar = localStorage.getItem("nama_user");
-    if(userTerdaftar) {
-        document.getElementById('user-info').innerHTML = `<h3>Pilot: ${userTerdaftar}</h3>`;
-    }
+let databaseLokal = []; // Tempat nampung kalau file JSON masih kosong
 
-    // Ambil Data dari JSON
-    try {
-        const respon = await fetch('data.json');
-        const data = await respon.json();
-        const wadah = document.getElementById('konten-utama');
+function prosesUpload() {
+    let judul = document.getElementById('up-judul').value;
+    let id = document.getElementById('up-id').value;
+    let kode = document.getElementById('up-kode').value;
 
-        data.forEach(item => {
-            if(item.tipe === "status") {
-                wadah.innerHTML += `<div class="status-card"><p>${item.isi}</p></div>`;
-            } else {
-                wadah.innerHTML += `<div class="video-card">
-                    <h4>${item.judul}</h4>
-                    <iframe src="https://www.youtube.com/embed/${item.id_short}" frameborder="0" allowfullscreen></iframe>
-                </div>`;
-            }
-        });
-    } catch (e) {
-        console.log("Gagal ambil data. Pastikan file data.json sudah ada!");
+    if(judul && id && kode) {
+        let dataBaru = {
+            "tipe": "video",
+            "judul": judul,
+            "id_short": id,
+            "kode_rahasia": kode
+        };
+        
+        databaseLokal.push(dataBaru);
+        // Simpan ke memori HP agar tidak hilang pas refresh
+        localStorage.setItem("db_video", JSON.stringify(databaseLokal));
+        
+        alert("Video Berhasil Terbit! Kode Rahasiamu adalah: " + kode);
+        location.reload(); 
     }
 }
-
-jalankanAplikasi();
