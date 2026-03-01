@@ -3,52 +3,65 @@ using System.Collections.Generic;
 
 class Program {
     static void Main() {
-        // LAYAR 1: REGISTER
-        Console.WriteLine("=== SISTEM RADAR KEAMANAN GEOMETRI ===");
-        Console.Write("Masukkan Nama Pilot: ");
-        string nama = Console.ReadLine();
+        // --- LAYAR REGISTER ---
+        Console.WriteLine("=== REGISTER AKUN PILOT BARU ===");
+        
+        Console.Write("Masukkan Username: ");
+        string username = Console.ReadLine();
 
-        Console.Write("Buat Password Teks: ");
+        Console.Write("Masukkan Nama Asli: ");
+        string namaAsli = Console.ReadLine();
+
+        Console.Write("Buat Password: ");
+        // Kita pakai password teks dulu, nanti sistem otomatis ubah ke gelombang
         string passwordTeks = Console.ReadLine();
 
-        // PROSES KONVERSI KE GELOMBANG KABEL
-        List<int> gelombangKabel = KonversiKeGelombang(passwordTeks);
+        // PROSES: Mengubah password menjadi "Bahasa Kabel" (Angka Gelombang)
+        List<int> kunciKabel = KonversiKeGelombang(passwordTeks);
 
-        Console.WriteLine("\n--- Akun Terdaftar ---");
-        Console.WriteLine("Nama: " + nama);
-        Console.Write("Kunci Kabel Kamu: ");
-        foreach(int angka in gelombangKabel) {
-            Console.Write(angka + " "); // Ini angka naik-turunnya
-        }
-        Console.WriteLine("\n----------------------");
+        Console.WriteLine("\n[Sistem]: Akun Berhasil Dibuat!");
+        Console.WriteLine("--------------------------------");
 
-        // LAYAR 2: LOGIN (PROTEKSI)
-        Console.WriteLine("\n[SISTEM TERKUNCI]");
-        Console.Write("Masukkan Password untuk Akses: ");
-        string inputCek = Console.ReadLine();
+        // --- LAYAR LOGIN (Pintu Keamanan) ---
+        Console.WriteLine("\n=== LOGIN SISTEM RADAR ===");
+        
+        Console.Write("Masukkan Username: ");
+        string loginUser = Console.ReadLine();
 
-        if (inputCek == passwordTeks) {
-            Console.WriteLine("\nAKSES DITERIMA!");
-            Console.WriteLine("Halo Pilot " + nama + ", Radar Siap Digunakan.");
+        Console.Write("Masukkan Password: ");
+        string loginPass = Console.ReadLine();
+
+        // Validasi: Cek apakah Username dan Password benar
+        if (loginUser == username && loginPass == passwordTeks) {
+            Console.WriteLine("\n[AKSES DITERIMA]");
+            Console.WriteLine("Selamat Datang, Pilot " + namaAsli);
+            Console.WriteLine("Status Radar: Aktif");
+            
+            // Menampilkan kode kabel rahasia sebagai identitas unik
+            Console.Write("ID Gelombang Kamu: ");
+            foreach(int koordinat in kunciKabel) {
+                Console.Write(koordinat + " ");
+            }
+            Console.WriteLine("\n--------------------------------");
         } else {
-            Console.WriteLine("\nAKSES DITOLAK! Virus Terdeteksi atau Password Salah.");
+            Console.WriteLine("\n[AKSES DITOLAK]");
+            Console.WriteLine("Username atau Password Salah! Sistem Terkunci.");
         }
     }
 
-    // Fungsi "Bahasa Sendiri" untuk merubah teks jadi lekukan kabel
+    // Fungsi "Bahasa Sendiri" untuk merubah teks jadi lekukan kabel (Naik-Turun)
     static List<int> KonversiKeGelombang(string teks) {
         List<int> hasil = new List<int>();
-        int posisiSekarang = 0;
+        int posisi = 0;
 
-        foreach (char c in teks) {
-            // Logika: Huruf awal alfabet (A, B, C) bikin kabel NAIK
-            // Huruf akhir (X, Y, Z) bikin kabel TURUN
-            if (c < 'm') {
-                posisiSekarang += 1; // Kabel naik
-            } else {
-                posisiSekarang -= 1; // Kabel turun
+        foreach (char c in teks.ToLower()) {
+            // Logika: a-m kabel NAIK (+1), n-z kabel TURUN (-1)
+            if (c >= 'a' && c <= 'm') {
+                posisi += 1;
+            } else if (c >= 'n' && c <= 'z') {
+                posisi -= 1;
             }
-            hasil.Add(posisiSekarang);
+            hasil.Add(posisi);
         }
         return hasil;
     }
