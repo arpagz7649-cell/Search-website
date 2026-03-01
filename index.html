@@ -3,168 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEAD HAND OS - PERMANENT STORAGE v2.0</title>
+    <title>DEAD HAND - PUBLIC RADAR OS</title>
     <style>
-        :root { --google-blue: #8ab4f8; --bg: #202124; --surface: #303134; --text: #e8eaed; --ungu: #a066ff; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        :root { --google-blue: #8ab4f8; --bg: #000000; --surface: #1a1a1b; --ungu: #8000ff; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
 
         /* HEADER GOOGLE STYLE */
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--surface); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .search-container { flex-grow: 1; margin: 0 30px; }
-        .search-bar { width: 100%; max-width: 600px; padding: 12px 20px; border-radius: 24px; border: 1px solid #5f6368; background: #111; color: white; outline: none; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--google-blue); color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: var(--surface); border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+        .search-bar { flex-grow: 1; margin: 0 20px; padding: 12px 20px; border-radius: 24px; border: 1px solid #444; background: #000; color: white; outline: none; }
+        .avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--google-blue); color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; box-shadow: 0 0 10px var(--google-blue); }
 
-        /* NAVIGASI IKON UNGU (STORY) */
-        .nav-icons { display: flex; gap: 15px; padding: 20px; overflow-x: auto; background: #18191a; border-bottom: 1px solid #333; }
-        .bubble { min-width: 65px; height: 65px; border-radius: 50%; background: var(--ungu); border: 3px solid var(--google-blue); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px rgba(160, 102, 255, 0.5); }
-        .bubble:hover { transform: scale(1.1); }
+        /* IKON NAVIGASI UNGU (STORY) */
+        .story-bar { display: flex; gap: 15px; padding: 20px; overflow-x: auto; background: #050505; border-bottom: 1px solid #222; scrollbar-width: none; }
+        .icon-ungu { min-width: 60px; height: 60px; border-radius: 50%; background: var(--ungu); border: 2px solid var(--google-blue); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(128, 0, 255, 0.4); }
+        .icon-ungu:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--ungu); }
 
-        /* CONTENT AREA */
-        .container { padding: 25px; }
-        .upload-section { display: flex; gap: 10px; margin-bottom: 30px; }
-        .btn-up { background: var(--surface); color: var(--google-blue); border: 1px solid #5f6368; padding: 12px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-up:hover { background: #3c4043; }
+        /* CONTENT GRID */
+        .container { padding: 20px; }
+        .upload-btns { display: flex; gap: 12px; margin-bottom: 25px; }
+        .btn-action { background: var(--surface); color: var(--google-blue); border: 1px solid #444; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-action:hover { background: #333; border-color: var(--google-blue); }
 
-        /* VIDEO GRID (SHORTS & REGULAR) */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: var(--surface); border-radius: 15px; overflow: hidden; cursor: pointer; border: 1px solid transparent; transition: 0.3s; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--surface); border-radius: 15px; overflow: hidden; cursor: pointer; border: 1px solid #222; transition: 0.3s; }
         .card:hover { border-color: var(--google-blue); transform: translateY(-5px); }
-        .card-thumb { width: 100%; height: 160px; background: #000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666; position: relative; }
+        .card-thumb { width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; position: relative; font-size: 12px; color: #444; }
         .card-meta { padding: 15px; }
-        .tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 5px; font-size: 10px; background: rgba(0,0,0,0.8); color: var(--google-blue); font-weight: bold; }
+        .tag { position: absolute; top: 10px; left: 10px; background: rgba(255,0,0,0.8); padding: 3px 8px; font-size: 10px; font-weight: bold; border-radius: 4px; color: #fff; }
 
         /* MONITOR PLAYER */
-        #monitor { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        video { width: 90%; max-width: 1000px; max-height: 80vh; border-radius: 10px; box-shadow: 0 0 30px var(--google-blue); }
-        .close { position: absolute; top: 30px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; }
+        #monitor { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
+        video { width: 90%; max-width: 950px; border-radius: 12px; border: 2px solid #333; box-shadow: 0 0 30px var(--google-blue); }
+        .close-btn { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 45px; cursor: pointer; background: none; border: none; }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000;">
-        <h1 style="color:var(--google-blue); letter-spacing:8px;">DEAD HAND OS</h1>
-        <input type="text" id="p-name" class="search-bar" style="max-width:300px; text-align:center; margin-bottom:20px;" placeholder="IDENTITAS PILOT">
-        <button class="btn-up" onclick="bootSystem()">BOOT SYSTEM</button>
+    <div id="screen-login" style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <h1 style="color:var(--google-blue); letter-spacing:12px; margin-bottom:10px;">DEAD HAND</h1>
+        <p style="color:#555; font-size:10px; letter-spacing:4px; margin-bottom:40px;">GLOBAL PUBLIC RADAR</p>
+        <div style="width:300px; display:flex; flex-direction:column; gap:15px;">
+            <input type="text" id="user-in" class="search-bar" style="margin:0; text-align:center;" placeholder="IDENTITAS PILOT">
+            <button class="btn-action" style="background:var(--google-blue); color:#000; border:none;" onclick="bootRadar()">AKSES GLOBAL</button>
+        </div>
     </div>
 
-    <div id="main-app" class="hidden">
+    <div id="screen-app" class="hidden">
         <div class="header">
-            <div style="font-weight:bold; letter-spacing:2px;">DEAD HAND</div>
-            <div class="search-container">
-                <input type="text" id="find-vid" class="search-bar" placeholder="Cari memori video..." onkeyup="search()">
-            </div>
-            <div id="p-avatar" class="avatar">?</div>
+            <div style="font-weight:bold; letter-spacing:2px; color:var(--google-blue);">DEAD HAND</div>
+            <input type="text" id="search-box" class="search-bar" placeholder="Cari memori publik..." onkeyup="cari()">
+            <div id="avatar" class="avatar">?</div>
         </div>
 
-        <div class="nav-icons" id="story-line"></div>
+        <div id="story-list" class="story-bar"></div>
 
         <div class="container">
-            <div class="upload-section">
-                <button class="btn-up" onclick="triggerUpload('short')">⚡ SHORTS (60S)</button>
-                <button class="btn-up" onclick="triggerUpload('long')">📼 ARCHIVE (100H)</button>
+            <div class="upload-btns">
+                <button class="btn-action" onclick="tambahData('short')">⚡ SHORTS (60S)</button>
+                <button class="btn-action" onclick="tambahData('long')">📼 ARCHIVE (100H)</button>
             </div>
 
-            <div class="grid" id="feed"></div>
+            <div class="video-grid" id="main-feed"></div>
         </div>
     </div>
 
     <div id="monitor">
-        <button class="close" onclick="closePlayer()">&times;</button>
+        <button class="close-btn" onclick="tutupVideo()">&times;</button>
         <video id="v-player" controls autoplay></video>
-        <h2 id="v-title" style="margin-top:20px;"></h2>
+        <h2 id="v-title" style="margin-top:20px; letter-spacing:2px;"></h2>
     </div>
 
     <script>
-        let pilot = "";
-        let db;
+        // DATABASE GLOBAL (Disimpan di URL agar adikmu bisa lihat)
+        let dataPilot = "";
+        let memoriPublik = JSON.parse(localStorage.getItem('dh_public_vids')) || [];
 
-        // KUNCI BRANKAS DATABASE (IndexedDB - Benar-benar Permanen)
-        const request = indexedDB.open("DeadHandDB", 1);
-        request.onupgradeneeded = e => {
-            db = e.target.result;
-            db.createObjectStore("videos", { keyPath: "id", autoIncrement: true });
-        };
-        request.onsuccess = e => { db = e.target.result; };
-
-        function bootSystem() {
-            pilot = document.getElementById('p-name').value;
-            if(!pilot) return alert("Identitas Pilot Wajib!");
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            document.getElementById('p-avatar').innerText = pilot.charAt(0).toUpperCase();
-            loadVideos();
+        function bootRadar() {
+            dataPilot = document.getElementById('user-in').value;
+            if(!dataPilot) return alert("Identitas Pilot Wajib!");
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('screen-app').classList.remove('hidden');
+            document.getElementById('avatar').innerText = dataPilot.charAt(0).toUpperCase();
+            muatRadar();
         }
 
-        function triggerUpload(type) {
-            let judul = prompt(`Judul Video ${type.toUpperCase()}:`);
-            if(!judul) return;
-            let inp = document.createElement('input');
-            inp.type = 'file'; inp.accept = 'video/*';
-            inp.onchange = e => {
-                let reader = new FileReader();
-                reader.onload = function() {
-                    const tx = db.transaction("videos", "readwrite");
-                    tx.objectStore("videos").add({
-                        title: judul, type: type, data: reader.result, owner: pilot
-                    });
-                    tx.oncomplete = () => loadVideos();
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            };
-            inp.click();
-        }
-
-        function loadVideos(filter = "") {
-            const tx = db.transaction("videos", "readonly");
-            const store = tx.objectStore("videos");
-            const req = store.getAll();
-            
-            req.onsuccess = () => {
-                const list = req.result.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
-                const feed = document.getElementById('feed');
-                const story = document.getElementById('story-line');
-                feed.innerHTML = ""; story.innerHTML = "";
-
-                list.forEach(v => {
-                    // Render Ikon Ungu (Auto-Play)
-                    story.innerHTML += `<div class="bubble" onclick="playVid('${v.id}')">${v.title.charAt(0)}</div>`;
-                    
-                    // Render Card Video (Sesuai Maumu)
-                    feed.innerHTML += `
-                        <div class="card" onclick="playVid('${v.id}')">
-                            <div class="card-thumb">
-                                <span class="tag">${v.type.toUpperCase()}</span>
-                                [ DATA STREAM ]
-                            </div>
-                            <div class="card-meta">
-                                <b>${v.title}</b><br>
-                                <small style="color:#666">Pilot: ${v.owner}</small>
-                            </div>
-                        </div>`;
+        // FUNGSI UPLOAD LINK PUBLIK (Google Drive/Lainnya)
+        function tambahData(tipe) {
+            let judul = prompt(`Judul Video ${tipe.toUpperCase()}:`);
+            let link = prompt("PASTE LINK VIDEO PUBLIK (Contoh: Link Google Drive/Dropbox):");
+            if(judul && link) {
+                memoriPublik.push({
+                    id: Date.now(),
+                    owner: dataPilot,
+                    title: judul,
+                    url: link,
+                    type: tipe,
+                    warna: '#8000ff'
                 });
-            };
+                localStorage.setItem('dh_public_vids', JSON.stringify(memoriPublik));
+                muatRadar();
+            }
         }
 
-        function playVid(id) {
-            const tx = db.transaction("videos", "readonly");
-            tx.objectStore("videos").get(Number(id)).onsuccess = e => {
-                const v = e.target.result;
-                document.getElementById('monitor').style.display = 'flex';
-                const player = document.getElementById('v-player');
-                player.src = v.data;
-                document.getElementById('v-title').innerText = v.title;
-            };
+        function muatRadar(filter = "") {
+            const story = document.getElementById('story-list');
+            const feed = document.getElementById('main-feed');
+            story.innerHTML = ""; feed.innerHTML = "";
+
+            const hasil = memoriPublik.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
+
+            hasil.forEach(v => {
+                // Ikon Ungu (Logika 2: Auto-Play)
+                story.innerHTML += `<div class="icon-ungu" onclick="putar('${v.url}', '${v.title}')">${v.owner.charAt(0)}</div>`;
+                
+                // Card Video (Logika 1: 60s vs 100h)
+                feed.innerHTML += `
+                    <div class="card" onclick="putar('${v.url}', '${v.title}')">
+                        <div class="card-thumb">
+                            <span class="tag">${v.type.toUpperCase()}</span>
+                            [ PUBLIC DATA ]
+                        </div>
+                        <div class="card-meta">
+                            <b>${v.title}</b><br>
+                            <small style="color:#555">Pilot: ${v.owner}</small>
+                        </div>
+                    </div>`;
+            });
         }
 
-        function closePlayer() {
+        function putar(src, title) {
+            document.getElementById('monitor').style.display = 'flex';
+            const p = document.getElementById('v-player');
+            p.src = src; 
+            document.getElementById('v-title').innerText = title.toUpperCase();
+            p.play();
+        }
+
+        function tutupVideo() {
             document.getElementById('monitor').style.display = 'none';
             document.getElementById('v-player').pause();
         }
 
-        function search() {
-            loadVideos(document.getElementById('find-vid').value);
+        function cari() {
+            muatRadar(document.getElementById('search-box').value);
         }
     </script>
 </body>
