@@ -1,269 +1,119 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEAD HAND - RADAR SYSTEM</title>
-    
-    <style>
-        /* RESET DASAR */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace; /* Font gaya hacker/terminal */
-        }
-
-        /* BACKGROUND UTAMA - HITAM PEKAT */
-        body {
-            background-color: #030303;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* EFEK GLITCH & SCANLINE (Gaya Layar Monitor Tua) */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
-
-        /* CONTAINER UTAMA */
-        #terminal-container {
-            width: 100%;
-            max-width: 500px;
-            padding: 40px 20px;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* TYPOGRAPHY JUDUL */
-        h1 {
-            color: #ff0000; /* Merah Darah */
-            font-size: 42px;
-            letter-spacing: 8px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-            text-transform: uppercase;
-        }
-
-        h2.subtitle {
-            color: #888888;
-            font-size: 12px;
-            letter-spacing: 4px;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        /* KOTAK INPUT (FORM) */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-
-        label {
-            color: #ff3333;
-            font-size: 14px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        input {
-            background-color: transparent;
-            border: 1px solid #333;
-            border-bottom: 2px solid #ff0000;
-            color: #ffffff;
-            padding: 12px 15px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            border-bottom: 2px solid #ffffff;
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
-        }
-
-        input::placeholder {
-            color: #444;
-            font-style: italic;
-        }
-
-        /* TEKS OPSIONAL */
-        .optional-text {
-            font-size: 11px;
-            color: #666;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
-
-        /* TOMBOL (BUTTONS) - SEPERTI DI FOTO */
-        button.btn-red {
-            background-color: #ff0000;
-            color: #ffffff;
-            border: none;
-            padding: 15px 20px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-            transition: background 0.2s;
-        }
-
-        button.btn-red:hover {
-            background-color: #cc0000;
-        }
-
-        button.btn-outline {
-            background-color: transparent;
-            color: #ff0000;
-            border: 1px solid #ff0000;
-            padding: 15px 20px;
-            width: 100%;
-            font-size: 14px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        button.btn-outline:hover {
-            background-color: rgba(255, 0, 0, 0.1);
-            color: #ffffff;
-        }
-
-        /* TEKS PERINGATAN BAWAH */
-        .footer-warning {
-            margin-top: 40px;
-            font-size: 12px;
-            color: #555;
-            letter-spacing: 2px;
-        }
-
-        /* KELAS UNTUK MENYEMBUNYIKAN LAYAR */
-        .hidden {
-            display: none !important;
-        }
-
-        /* ========================================= */
-        /* AREA RADAR VIDEO (MEMORI MASA LALU)       */
-        /* ========================================= */
-        #radar-video-section {
-            width: 100%;
-            max-width: 600px;
-            text-align: left;
-        }
-
-        .video-card {
-            border: 1px solid #333;
-            padding: 15px;
-            margin-bottom: 20px;
-            background: rgba(10, 10, 10, 0.8);
-            border-left: 4px solid #ff0000;
-        }
-
-        .video-card h3 {
-            color: #fff;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="terminal-container">
-
-        <div id="layar-register">
-            <h1>DEAD HAND</h1>
-            <h2 class="subtitle">Radar Identity Initialization</h2>
-
-            <div class="form-group">
-                <label>Username [Sistem Identifikasi]</label>
-                <input type="text" id="reg-user" placeholder="Ketik Username..." autocomplete="off">
-
-                <label>Nama Asli [Identitas Personal]</label>
-                <input type="text" id="reg-asli" placeholder="Ketik Nama Asli..." autocomplete="off">
-
-                <label>Password [Kunci Wajib]</label>
-                <input type="password" id="reg-pass" placeholder="Bentuk Sandi...">
-
-                <label>Alamat Email / Sandi Email</label>
-                <p class="optional-text">*Status: Opsional (Set terserah jika mau)</p>
-                <input type="email" id="reg-email" placeholder="Ketik Email..." autocomplete="off">
-            </div>
-
-            <button class="btn-red" onclick="jalankanRegister()">BUAT IDENTITAS</button>
-            <button class="btn-outline" onclick="gantiLayar('layar-login')">SUDAH PUNYA AKSES</button>
-            
-            <p class="footer-warning">Siapkan mentalmu...</p>
-        </div>
-
-
-        <div id="layar-login" class="hidden">
-            <h1>DEAD HAND</h1>
-            <h2 class="subtitle">System Access Required</h2>
-
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="login-user" placeholder="Identitas Login...">
-
-                <label>Password</label>
-                <input type="password" id="login-pass" placeholder="Kunci Akses...">
-            </div>
-
-            <button class="btn-red" onclick="jalankanLogin()">AKSES SISTEM</button>
-            <button class="btn-outline" onclick="gantiLayar('layar-register')">KEMBALI KE INISIALISASI</button>
-            
-            <p class="footer-warning">Akses ilegal akan dilacak.</p>
-        </div>
-
-    </div>
-
-
-    <div id="layar-radar" class="hidden">
-        <div id="radar-video-section">
-            <h1 style="font-size: 28px;">RADAR AKTIF</h1>
-            <h2 class="subtitle" id="sapaan-pilot">Welcome, Pilot</h2>
-            
-            <button class="btn-red" style="width: auto; padding: 10px 20px; margin-bottom: 20px;" onclick="uploadVideoBaru()">+ TAMBAH DATA</button>
-            <button class="btn-outline" style="width: auto; padding: 10px 20px; border-color: #555; color: #aaa;" onclick="gantiLayar('layar-login')">TERMINATE</button>
-
-            <div id="wadah-memori-video">
-                </div>
-        </div>
-    </div>
-
     <script>
-        // Ini hanya fungsi dasar agar tombol "Sudah Punya Akses" bisa diklik
+        // 1. MEMBANGUN BRANKAS (LOCAL STORAGE)
+        // Ini yang bikin data tidak hilang walau di-refresh 1000 kali!
+        let databasePilot = JSON.parse(localStorage.getItem('deadhand_users')) || [];
+        let brankasVideo = JSON.parse(localStorage.getItem('deadhand_videos')) || [];
+        let sesiAktif = null;
+
+        // FUNGSI GANTI LAYAR
         function gantiLayar(targetId) {
             document.getElementById('layar-register').classList.add('hidden');
             document.getElementById('layar-login').classList.add('hidden');
             document.getElementById('layar-radar').classList.add('hidden');
-            
             document.getElementById(targetId).classList.remove('hidden');
         }
-    </script>
 
-</body>
-</html>
+        // 2. MANTRA BUAT IDENTITAS (REGISTER)
+        function jalankanRegister() {
+            let user = document.getElementById('reg-user').value;
+            let asli = document.getElementById('reg-asli').value;
+            let pass = document.getElementById('reg-pass').value;
+            let email = document.getElementById('reg-email').value; // Opsional
+
+            if(!user || !asli || !pass) {
+                alert("[SISTEM MENOLAK] Identitas Wajib (Username, Nama, Password) harus diisi!");
+                return;
+            }
+
+            // Cek kalau username sudah dipakai
+            let cekUser = databasePilot.find(p => p.username === user);
+            if(cekUser) {
+                alert("[ERROR] Username sudah terdaftar di database radar!");
+                return;
+            }
+
+            // Masukkan ke Brankas
+            databasePilot.push({
+                username: user,
+                namaAsli: asli,
+                password: pass,
+                email: email
+            });
+
+            // Kunci Brankas Permanen
+            localStorage.setItem('deadhand_users', JSON.stringify(databasePilot));
+            
+            alert("IDENTITAS TEREKAM DI BRANKAS PERMANEN!");
+            gantiLayar('layar-login'); // Lempar ke halaman login
+        }
+
+        // 3. MANTRA LOGIN (PINTU MASUK)
+        function jalankanLogin() {
+            let user = document.getElementById('login-user').value;
+            let pass = document.getElementById('login-pass').value;
+
+            // Cari di brankas, ada nggak yang cocok username & passwordnya?
+            let akun = databasePilot.find(p => p.username === user && p.password === pass);
+
+            if(akun) {
+                sesiAktif = akun; // Ingat siapa yang lagi login
+                document.getElementById('sapaan-pilot').innerText = "Pilot Aktif: " + akun.namaAsli;
+                gantiLayar('layar-radar');
+                
+                // MUNCULKAN VIDEO MASA LALU
+                tampilkanVideoLama(); 
+            } else {
+                alert("[FATAL] Akses Ditolak! Identitas atau Kunci salah.");
+            }
+        }
+
+        // ==========================================
+        // SISTEM MEMORI VIDEO PERMANEN
+        // ==========================================
+        
+        function uploadVideoBaru() {
+            let judulVideo = prompt("Masukkan Nama/Judul Data Video:");
+            let linkVideo = prompt("Masukkan Link Video (Contoh: link YouTube atau file mp4):");
+
+            if(linkVideo && judulVideo) {
+                // Simpan ke brankas video
+                brankasVideo.push({
+                    pemilik: sesiAktif.username, // Tandai ini video milik siapa
+                    judul: judulVideo,
+                    link: linkVideo,
+                    waktu: new Date().toLocaleString()
+                });
+
+                // Kunci Brankas Permanen
+                localStorage.setItem('deadhand_videos', JSON.stringify(brankasVideo));
+                
+                // Langsung munculkan di layar
+                tampilkanVideoLama(); 
+            }
+        }
+
+        function tampilkanVideoLama() {
+            let wadah = document.getElementById('wadah-memori-video');
+            wadah.innerHTML = ""; // Bersihkan layar dulu
+
+            // Filter: Hanya tampilkan video milik akun yang sedang login ini
+            let videoKu = brankasVideo.filter(v => v.pemilik === sesiAktif.username);
+
+            if(videoKu.length === 0) {
+                wadah.innerHTML = "<p style='color:#555; font-style:italic;'>[Memori Kosong. Belum ada data video yang tersimpan.]</p>";
+                return;
+            }
+
+            // Panggil memori dari masa lalu satu per satu
+            videoKu.forEach(vid => {
+                wadah.innerHTML += `
+                    <div class="video-card" style="border: 1px solid #333; border-left: 4px solid #ff0000; padding: 15px; margin-bottom: 15px; background: rgba(10,10,10,0.8);">
+                        <h3 style="color:#fff; font-size: 16px; margin-bottom: 5px;">${vid.judul}</h3>
+                        <p style="color:#888; font-size: 11px; margin-bottom: 15px;">Diunggah: ${vid.waktu}</p>
+                        <a href="${vid.link}" target="_blank" style="color:#ff0000; text-decoration:none; border:1px solid #ff0000; padding:8px 12px; font-size:12px; text-transform:uppercase;">Putar Video</a>
+                    </div>
+                `;
+            });
+        }
+    </script>
+    
