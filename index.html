@@ -3,139 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Radar Video</title>
+    <title>Radar Video (Memori Permanen)</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+
     <style>
-        /* CSS: Baju untuk Website */
-        body { background: #111; color: white; font-family: sans-serif; text-align: center; margin-top: 50px; }
-        
+        body { background: #111; color: white; font-family: sans-serif; text-align: center; margin-top: 30px; }
         .layar { display: none; padding: 20px; }
-        .layar-aktif { display: block; } /* Ini mantra untuk menampilkan layar */
-
-        h1.besar { font-size: 50px; color: #ff3333; margin-bottom: 10px; }
-        
+        .layar-aktif { display: block; }
         input { padding: 10px; width: 80%; max-width: 300px; margin: 10px 0; border-radius: 5px; border: none; }
-        button { padding: 12px 20px; background: #0088ff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 5px; }
-        button:hover { background: #0055cc; }
-
+        button { padding: 12px 20px; background: #0088ff; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; font-weight: bold;}
         video { width: 100%; max-width: 400px; border-radius: 10px; border: 2px solid #444; margin-top: 20px; }
-        
         .kode-box { background: #333; padding: 10px; color: #00ff00; font-family: monospace; border-radius: 5px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
     <div id="layar-1" class="layar layar-aktif">
-        <h1 class="besar">REGISTER</h1>
-        <p>Masukkan identitas Pilot untuk masuk ke sistem.</p>
+        <h1>REGISTER SISTEM</h1>
         <input type="text" id="input-nama" placeholder="Ketik Nama Kamu...">
         <br>
-        <button onclick="masukLayar2()">MASUK KE RADAR</button>
+        <button onclick="masukSistem()">MASUK KE RADAR</button>
     </div>
 
     <div id="layar-2" class="layar">
         <h2 id="sapaan-pilot">Halo!</h2>
-        <p>Sistem siap. Apa yang ingin kamu lakukan?</p>
-        <button onclick="bukaMenu('layar-nonton')">Nonton Video</button>
-        <button onclick="bukaMenu('layar-upload')" style="background: #ffaa00;">Upload Video</button>
+        <button onclick="bukaMenu('layar-nonton')">Nonton Video Trending</button>
+        <button onclick="bukaMenu('layar-upload')" style="background: #ffaa00;">Upload Video Internal</button>
     </div>
 
     <div id="layar-upload" class="layar">
-        <h2>Upload Video Baru</h2>
+        <h2>Upload ke Memori Permanen</h2>
         <input type="file" id="file-internal" accept="video/*">
         <br>
-        <input type="text" id="judul-video" placeholder="Masukkan Judul Video...">
+        <input type="text" id="judul-video" placeholder="Judul Video...">
         <br>
-        <button onclick="prosesUpload()">Mulai Upload & Buat Kode</button>
+        <button onclick="prosesUpload()">Simpan Selamanya</button>
         <button onclick="bukaMenu('layar-2')" style="background: #555;">Kembali</button>
-
         <div id="hasil-upload" class="kode-box" style="display: none;"></div>
     </div>
 
     <div id="layar-nonton" class="layar">
-        <h2 id="judul-nonton">Video Trending / Pertama</h2>
+        <h2 id="judul-nonton">Mencari Data...</h2>
         <video id="player-utama" controls></video>
         <br>
-        <button onclick="bukaMenu('layar-2')" style="background: #555;">Kembali</button>
+        <button onclick="bukaMenu('layar-2')" style="background: #555;">Menu Utama</button>
     </div>
 
     <script>
-        // Database sementara untuk nyimpan video yang diupload
         let databaseVideo = [];
 
-        // Fungsi untuk pindah-pindah layar
+        // 1. ILMU MEMORI PERMANEN: Cek brankas pas website dibuka
+        async function cekMemori() {
+            let dataLama = await localforage.getItem('db_video');
+            if (dataLama) {
+                databaseVideo = dataLama; // Tarik data lama biar nggak hilang
+                console.log("Memori berhasil dipulihkan! Total video: " + databaseVideo.length);
+            }
+            
+            // Cek apakah Pilot sudah pernah login sebelumnya
+            let namaLama = localStorage.getItem('nama_pilot');
+            if(namaLama) {
+                document.getElementById('input-nama').value = namaLama;
+            }
+        }
+        
+        // Panggil fungsi cek memori langsung pas web nyala
+        cekMemori();
+
+        // 2. Fungsi Pindah Layar
         function bukaMenu(idLayar) {
-            // Tutup semua layar dulu
             document.querySelectorAll('.layar').forEach(el => el.classList.remove('layar-aktif'));
-            // Buka layar yang diminta
             document.getElementById(idLayar).classList.add('layar-aktif');
             
-            // Kalau buka menu nonton, langsung putar video
             if (idLayar === 'layar-nonton') {
                 putarVideoPertama();
             }
         }
 
-        // Fungsi dari Layar 1 ke Layar 2
-        function masukLayar2() {
+        function masukSistem() {
             let nama = document.getElementById('input-nama').value;
             if (nama !== "") {
-                document.getElementById('sapaan-pilot').innerText = "Halo, Pilot " + nama + "!";
-                bukaMenu('layar-2'); // Sihirnya di sini, layar 1 hilang, layar 2 muncul!
+                localStorage.setItem('nama_pilot', nama); // Simpan nama di dompet
+                document.getElementById('sapaan-pilot').innerText = "Pilot " + nama + " Aktif!";
+                bukaMenu('layar-2');
             } else {
-                alert("Isi nama dulu bos!");
+                alert("Masukkan nama dulu!");
             }
         }
 
-        // Fungsi Upload File & Bikin Kode Otomatis
-        function prosesUpload() {
-            let fileInput = document.getElementById('file-internal').files[0];
+        // 3. Fungsi Upload Video Permanen
+        async function prosesUpload() {
+            let fileVideo = document.getElementById('file-internal').files[0];
             let judul = document.getElementById('judul-video').value;
 
-            if (fileInput && judul) {
-                // 1. Buat Kode Rahasia Otomatis (Contoh: video_8f7a)
-                let kodeUnik = "video_" + Math.random().toString(16).slice(2, 6);
+            if (fileVideo && judul) {
+                let kodeUnik = "v-" + Math.random().toString(16).slice(2, 6);
 
-                // 2. Ubah file internal jadi URL sementara (Ilmu Pengorbanan Tingkat Tinggi!)
-                let urlVideoLokal = URL.createObjectURL(fileInput);
-
-                // 3. Simpan ke database kita
+                // Masukkan file video asli ke dalam array
                 databaseVideo.push({
                     judul: judul,
                     kode: kodeUnik,
-                    url: urlVideoLokal
+                    file_asli: fileVideo // Ini yang bikin datanya awet!
                 });
 
-                // 4. Tampilkan sukses
+                // SIMPAN KE BRANKAS BESI (IndexedDB via localforage)
+                await localforage.setItem('db_video', databaseVideo);
+
                 let hasil = document.getElementById('hasil-upload');
                 hasil.style.display = "block";
-                hasil.innerHTML = `Sukses! <br> Kode Video Kamu: <b>${kodeUnik}</b>`;
+                hasil.innerHTML = `Tersimpan Permanen! <br> Kode: <b>${kodeUnik}</b>`;
                 
-                alert("Upload Selesai!");
+                // Kosongkan form
+                document.getElementById('judul-video').value = "";
+                alert("Upload Sukses! Sekarang coba refresh halamannya, video ini tidak akan hilang.");
             } else {
-                alert("Pilih video dari HP dan isi judulnya dulu!");
+                alert("Pilih video dan isi judulnya!");
             }
         }
 
-        // Fungsi Nonton: Otomatis pilih video trending (atau video pertama)
+        // 4. Fungsi Muter Video dari Brankas
         function putarVideoPertama() {
             let player = document.getElementById('player-utama');
             let teksJudul = document.getElementById('judul-nonton');
 
-            // Cek apakah sudah ada orang yang upload (Data lebih dari 0)
             if (databaseVideo.length > 0) {
-                let videoTrending = databaseVideo[0]; // Ambil video urutan pertama
-                teksJudul.innerText = "Muter: " + videoTrending.judul;
-                player.src = videoTrending.url;
+                let videoPertama = databaseVideo[0]; 
+                teksJudul.innerText = "Muter: " + videoPertama.judul;
+                
+                // Ubah file asli yang diambil dari brankas jadi URL yang bisa diputar
+                player.src = URL.createObjectURL(videoPertama.file_asli);
                 player.play();
             } else {
-                // Kalau nol (kosong), kasih tahu user
-                teksJudul.innerText = "Belum ada video di radar!";
-                player.src = ""; // Kosongkan layar video
-                alert("Sistem kosong! Kamu harus upload video dulu.");
-                bukaMenu('layar-2'); // Balikin ke menu utama
+                teksJudul.innerText = "Belum ada video!";
+                player.src = "";
+                alert("Sistem kosong! Kembali dan upload video dulu.");
+                bukaMenu('layar-2');
             }
         }
     </script>
-
 </body>
 </html>
