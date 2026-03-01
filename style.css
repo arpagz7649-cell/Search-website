@@ -1,0 +1,8 @@
+body { background: #1a1a1a; color: white; font-family: sans-serif; }
+#wadah-konten { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+.status-box { background: #333; border-left: 5px solid gold; padding: 15px; margin: 10px; border-radius: 8px; width: 90%; }
+.status-box span { font-size: 12px; color: #888; }
+
+.video-box { background: #222; padding: 10px; margin: 10px; border-radius: 10px; text-align: center; }
+iframe { width: 315px; height: 560px; border-radius: 10px; } /* Ukuran Vertikal/Shorts */
