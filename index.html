@@ -3,284 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google x DEAD HAND - OS</title>
+    <title>DEAD HAND OS - PERMANENT STORAGE v2.0</title>
     <style>
-        /* GOOGLE MATERIAL DESIGN THEME (Clean Dark Mode) */
-        :root { 
-            --bg: #202124; --surface: #303134; --primary: #8ab4f8; 
-            --text: #e8eaed; --text-sec: #9aa0a6; --danger: #ea4335;
-        }
-        body { 
-            background: var(--bg); color: var(--text); font-family: 'Google Sans', Roboto, Arial, sans-serif; 
-            margin: 0; padding: 0; overflow-x: hidden; 
-        }
+        :root { --google-blue: #8ab4f8; --bg: #202124; --surface: #303134; --text: #e8eaed; --ungu: #a066ff; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
 
-        /* 1. GOOGLE TOP NAV BAR */
-        .top-bar {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 24px; background: var(--surface); border-bottom: 1px solid #3c4043;
-            position: sticky; top: 0; z-index: 100;
-        }
-        .brand { font-size: 22px; font-weight: 500; letter-spacing: 1px; color: var(--text); display: flex; align-items: center; gap: 10px;}
-        
-        /* MESIN PENCARI PINTAR (SMART SEARCH) */
-        .search-box {
-            flex-grow: 1; max-width: 600px; margin: 0 20px;
-            position: relative;
-        }
-        .search-input {
-            width: 100%; padding: 12px 20px; border-radius: 24px;
-            border: 1px solid #5f6368; background: var(--bg); color: var(--text);
-            font-size: 16px; outline: none; transition: 0.3s;
-        }
-        .search-input:focus { border-color: var(--primary); background: #303134; box-shadow: 0 1px 6px rgba(0,0,0,0.3); }
+        /* HEADER GOOGLE STYLE */
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--surface); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .search-container { flex-grow: 1; margin: 0 30px; }
+        .search-bar { width: 100%; max-width: 600px; padding: 12px 20px; border-radius: 24px; border: 1px solid #5f6368; background: #111; color: white; outline: none; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--google-blue); color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
 
-        .profile-btn {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--primary);
-            color: #000; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 18px; cursor: pointer; object-fit: cover;
-        }
+        /* NAVIGASI IKON UNGU (STORY) */
+        .nav-icons { display: flex; gap: 15px; padding: 20px; overflow-x: auto; background: #18191a; border-bottom: 1px solid #333; }
+        .bubble { min-width: 65px; height: 65px; border-radius: 50%; background: var(--ungu); border: 3px solid var(--google-blue); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px rgba(160, 102, 255, 0.5); }
+        .bubble:hover { transform: scale(1.1); }
 
-        /* 2. IKON NAVIGASI ATAS (AUTO-PLAY BUBBLES) */
-        .story-bar {
-            display: flex; gap: 15px; padding: 15px 24px; overflow-x: auto; border-bottom: 1px solid #3c4043;
-        }
-        .story-bubble {
-            min-width: 60px; height: 60px; border-radius: 50%; background: #8000ff; /* Warna Ungu */
-            border: 2px solid var(--primary); padding: 2px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .story-bubble:hover { transform: scale(1.1); }
+        /* CONTENT AREA */
+        .container { padding: 25px; }
+        .upload-section { display: flex; gap: 10px; margin-bottom: 30px; }
+        .btn-up { background: var(--surface); color: var(--google-blue); border: 1px solid #5f6368; padding: 12px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-up:hover { background: #3c4043; }
 
-        /* 3. MAIN CONTENT & VIDEO GRID */
-        .container { padding: 24px; }
-        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-google {
-            background: var(--surface); color: var(--primary); border: 1px solid #5f6368;
-            padding: 10px 20px; border-radius: 24px; cursor: pointer; font-weight: 500;
-            display: flex; align-items: center; gap: 8px; transition: 0.2s;
-        }
-        .btn-google:hover { background: rgba(138, 180, 248, 0.08); }
+        /* VIDEO GRID (SHORTS & REGULAR) */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--surface); border-radius: 15px; overflow: hidden; cursor: pointer; border: 1px solid transparent; transition: 0.3s; }
+        .card:hover { border-color: var(--google-blue); transform: translateY(-5px); }
+        .card-thumb { width: 100%; height: 160px; background: #000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666; position: relative; }
+        .card-meta { padding: 15px; }
+        .tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 5px; font-size: 10px; background: rgba(0,0,0,0.8); color: var(--google-blue); font-weight: bold; }
 
-        .video-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
-        }
-        .video-card {
-            background: var(--surface); border-radius: 12px; overflow: hidden;
-            transition: box-shadow 0.3s; cursor: pointer;
-        }
-        .video-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .vid-thumb { width: 100%; height: 170px; background: #000; display: flex; align-items: center; justify-content: center; color: #555; }
-        .vid-info { padding: 16px; }
-        .vid-title { font-size: 16px; margin: 0 0 8px 0; font-weight: 500; }
-        
-        /* INTERAKSI (LIKE, SHARE, SUBSCRIBE) */
-        .interaction-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 15px; }
-        .btn-sub { background: var(--text); color: var(--bg); border: none; padding: 6px 16px; border-radius: 18px; font-weight: bold; cursor: pointer; }
-        .icon-btn { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 14px; }
-        .icon-btn:hover { color: var(--text); }
-
-        /* PLAYER MODAL (FULLSCREEN) */
-        #player-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; display: none;
-        }
-        .close-btn { position: absolute; top: 20px; right: 20px; background: none; color: white; border: none; font-size: 30px; cursor: pointer; }
+        /* MONITOR PLAYER */
+        #monitor { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        video { width: 90%; max-width: 1000px; max-height: 80vh; border-radius: 10px; box-shadow: 0 0 30px var(--google-blue); }
+        .close { position: absolute; top: 30px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" style="height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px;">
-        <h1 style="color: var(--primary);">DEAD HAND <span style="color:var(--text); font-weight:300;">OS</span></h1>
-        <input type="text" id="username" class="search-input" placeholder="Masukkan Nama Pilot..." style="max-width: 300px; text-align: center;">
-        <button class="btn-google" onclick="login()"><span style="font-size:20px;">🦆</span> INISIALISASI SISTEM</button>
+    <div id="login-screen" style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000;">
+        <h1 style="color:var(--google-blue); letter-spacing:8px;">DEAD HAND OS</h1>
+        <input type="text" id="p-name" class="search-bar" style="max-width:300px; text-align:center; margin-bottom:20px;" placeholder="IDENTITAS PILOT">
+        <button class="btn-up" onclick="bootSystem()">BOOT SYSTEM</button>
     </div>
 
-    <div id="app-screen" class="hidden">
-        <div class="top-bar">
-            <div class="brand">DEAD HAND</div>
-            <div class="search-box">
-                <input type="text" class="search-input" id="search-bar" placeholder="Telusuri video (Pencarian Pintar)..." onkeyup="cariVideo()">
+    <div id="main-app" class="hidden">
+        <div class="header">
+            <div style="font-weight:bold; letter-spacing:2px;">DEAD HAND</div>
+            <div class="search-container">
+                <input type="text" id="find-vid" class="search-bar" placeholder="Cari memori video..." onkeyup="search()">
             </div>
-            <img id="my-profile-pic" class="profile-btn" src="" alt="P" onclick="gantiFoto()">
+            <div id="p-avatar" class="avatar">?</div>
         </div>
 
-        <div class="story-bar" id="story-board">
-            </div>
+        <div class="nav-icons" id="story-line"></div>
 
         <div class="container">
-            <div class="action-buttons">
-                <button class="btn-google" onclick="uploadData('short')">⚡ Upload Shorts (Max 60s)</button>
-                <button class="btn-google" onclick="uploadData('long')">📼 Upload Archive (Max 100h)</button>
+            <div class="upload-section">
+                <button class="btn-up" onclick="triggerUpload('short')">⚡ SHORTS (60S)</button>
+                <button class="btn-up" onclick="triggerUpload('long')">📼 ARCHIVE (100H)</button>
             </div>
 
-            <div id="peringatan-kiamat" style="color: var(--danger); font-size: 14px; margin-bottom: 20px;" class="hidden">
-                ⚠️ PERINGATAN KIAMAT: Subscriber Anda kurang dari 2. Akun akan dihapus dalam 365 hari sejak mendaftar!
-            </div>
-
-            <div class="video-grid" id="video-feed">
-                </div>
+            <div class="grid" id="feed"></div>
         </div>
     </div>
 
-    <div id="player-modal">
-        <button class="close-btn" onclick="tutupPlayer()">&times;</button>
-        <video id="vid-player" controls style="max-width: 90%; max-height: 80vh; border-radius: 8px;"></video>
-        <h2 id="vid-title" style="margin-top: 20px;">Memutar Data...</h2>
+    <div id="monitor">
+        <button class="close" onclick="closePlayer()">&times;</button>
+        <video id="v-player" controls autoplay></video>
+        <h2 id="v-title" style="margin-top:20px;"></h2>
     </div>
 
     <script>
-        // CORE DATABASE (Mengingat Selamanya)
-        let dbUsers = JSON.parse(localStorage.getItem('ghand_users')) || [];
-        let dbVids = JSON.parse(localStorage.getItem('ghand_vids')) || [];
-        let me = null;
+        let pilot = "";
+        let db;
 
-        function login() {
-            let u = document.getElementById('username').value.trim();
-            if(!u) return;
+        // KUNCI BRANKAS DATABASE (IndexedDB - Benar-benar Permanen)
+        const request = indexedDB.open("DeadHandDB", 1);
+        request.onupgradeneeded = e => {
+            db = e.target.result;
+            db.createObjectStore("videos", { keyPath: "id", autoIncrement: true });
+        };
+        request.onsuccess = e => { db = e.target.result; };
 
-            // Logika 5: Moderasi Kiamat (Cek 1 Tahun & 2 Sub)
-            me = dbUsers.find(x => x.name === u);
-            if(!me) {
-                me = { name: u, joinDate: Date.now(), subs: 0, avatar: '' };
-                dbUsers.push(me);
-            } else {
-                let usiaAkunHari = (Date.now() - me.joinDate) / (1000 * 60 * 60 * 24);
-                if (usiaAkunHari > 365 && me.subs < 2) {
-                    alert("💀 DEAD HAND PROTOCOL AKTIF: Usia akun lebih dari 1 tahun dan subscriber di bawah 2. SELURUH DATA DIHAPUS!");
-                    dbUsers = dbUsers.filter(x => x.name !== u);
-                    dbVids = dbVids.filter(x => x.owner !== u);
-                    simpanDB(); return location.reload();
-                }
-            }
-            simpanDB();
-            
+        function bootSystem() {
+            pilot = document.getElementById('p-name').value;
+            if(!pilot) return alert("Identitas Pilot Wajib!");
             document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-screen').classList.remove('hidden');
-            
-            // Set Avatar
-            let pic = document.getElementById('my-profile-pic');
-            if(me.avatar) { pic.src = me.avatar; pic.style.background = 'transparent'; }
-            else { pic.outerHTML = `<div class="profile-btn" onclick="gantiFoto()">${me.name.charAt(0).toUpperCase()}</div>`; }
-
-            if(me.subs < 2) document.getElementById('peringatan-kiamat').classList.remove('hidden');
-
-            renderFeed();
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('p-avatar').innerText = pilot.charAt(0).toUpperCase();
+            loadVideos();
         }
 
-        // Logika 3: Custom Foto Profil Kecil
-        function gantiFoto() {
-            let url = prompt("Masukkan Link Foto Profil Baru (Harus file kecil/URL):");
-            if(url) { me.avatar = url; simpanDB(); location.reload(); }
-        }
-
-        // Logika 1: Dua Kategori Upload (60s vs 100h)
-        function uploadData(tipe) {
-            let limit = tipe === 'short' ? "Maksimal 60 Detik" : "Maksimal 100 Jam";
-            let judul = prompt(`Judul Video (${limit}):`);
+        function triggerUpload(type) {
+            let judul = prompt(`Judul Video ${type.toUpperCase()}:`);
             if(!judul) return;
-
-            let input = document.createElement('input');
-            input.type = 'file'; input.accept = 'video/*';
-            input.onchange = e => {
-                let file = e.target.files[0];
+            let inp = document.createElement('input');
+            inp.type = 'file'; inp.accept = 'video/*';
+            inp.onchange = e => {
                 let reader = new FileReader();
                 reader.onload = function() {
-                    dbVids.push({
-                        id: Date.now(), owner: me.name, title: judul, 
-                        type: tipe, data: reader.result, likes: 0
+                    const tx = db.transaction("videos", "readwrite");
+                    tx.objectStore("videos").add({
+                        title: judul, type: type, data: reader.result, owner: pilot
                     });
-                    simpanDB(); renderFeed();
+                    tx.oncomplete = () => loadVideos();
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(e.target.files[0]);
             };
-            input.click();
+            inp.click();
         }
 
-        // RENDER UI & Logika 4 (Pencarian Fleksibel)
-        function renderFeed(query = "") {
-            let story = document.getElementById('story-board');
-            let feed = document.getElementById('video-feed');
-            story.innerHTML = ""; feed.innerHTML = "";
+        function loadVideos(filter = "") {
+            const tx = db.transaction("videos", "readonly");
+            const store = tx.objectStore("videos");
+            const req = store.getAll();
+            
+            req.onsuccess = () => {
+                const list = req.result.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
+                const feed = document.getElementById('feed');
+                const story = document.getElementById('story-line');
+                feed.innerHTML = ""; story.innerHTML = "";
 
-            // Pencarian Pintar (Mencari kata yang mirip)
-            let hasil = dbVids.filter(v => v.title.toLowerCase().includes(query.toLowerCase()));
-
-            hasil.forEach(v => {
-                // Logika 2: Ikon Ungu (Story) Auto-Play
-                story.innerHTML += `<div class="story-bubble" onclick="putar('${v.data}', '${v.title}')">${v.owner.charAt(0).toUpperCase()}</div>`;
-
-                // Logika 3 & 4: Subscribe Bebek, Like, Share Web
-                feed.innerHTML += `
-                    <div class="video-card">
-                        <div class="vid-thumb" onclick="putar('${v.data}', '${v.title}')">
-                            ▶ ${v.type === 'short' ? 'SHORTS (60s)' : 'ARCHIVE (100h)'}
-                        </div>
-                        <div class="vid-info">
-                            <h3 class="vid-title">${v.title}</h3>
-                            <div style="font-size:12px; color:var(--text-sec);">${v.owner}</div>
-                            
-                            <div class="interaction-bar">
-                                <button class="btn-sub" onclick="subscribe('${v.owner}')">Subscribe 🦆</button>
-                                <div>
-                                    <button class="icon-btn" onclick="likeVid(${v.id})">👍 ${v.likes}</button>
-                                    <button class="icon-btn" onclick="shareVid(${v.id})">🔗 Share</button>
-                                </div>
+                list.forEach(v => {
+                    // Render Ikon Ungu (Auto-Play)
+                    story.innerHTML += `<div class="bubble" onclick="playVid('${v.id}')">${v.title.charAt(0)}</div>`;
+                    
+                    // Render Card Video (Sesuai Maumu)
+                    feed.innerHTML += `
+                        <div class="card" onclick="playVid('${v.id}')">
+                            <div class="card-thumb">
+                                <span class="tag">${v.type.toUpperCase()}</span>
+                                [ DATA STREAM ]
                             </div>
-                        </div>
-                    </div>`;
-            });
+                            <div class="card-meta">
+                                <b>${v.title}</b><br>
+                                <small style="color:#666">Pilot: ${v.owner}</small>
+                            </div>
+                        </div>`;
+                });
+            };
         }
 
-        function cariVideo() { renderFeed(document.getElementById('search-bar').value); }
-
-        function putar(src, judul) {
-            document.getElementById('player-modal').style.display = 'flex';
-            let p = document.getElementById('vid-player');
-            p.src = src; p.play();
-            document.getElementById('vid-title').innerText = judul;
-        }
-        function tutupPlayer() {
-            document.getElementById('player-modal').style.display = 'none';
-            document.getElementById('vid-player').pause();
+        function playVid(id) {
+            const tx = db.transaction("videos", "readonly");
+            tx.objectStore("videos").get(Number(id)).onsuccess = e => {
+                const v = e.target.result;
+                document.getElementById('monitor').style.display = 'flex';
+                const player = document.getElementById('v-player');
+                player.src = v.data;
+                document.getElementById('v-title').innerText = v.title;
+            };
         }
 
-        // Logika 3 & 4: Sistem Subs & Viral
-        function subscribe(targetName) {
-            if(targetName === me.name) return alert("Tidak bisa subscribe diri sendiri!");
-            let targetUser = dbUsers.find(x => x.name === targetName);
-            if(targetUser) { 
-                targetUser.subs += 1; 
-                simpanDB(); 
-                alert(`Anda mensubscribe ${targetName}! Muncul Bebek 🦆`); 
-            }
-        }
-        function likeVid(id) {
-            let v = dbVids.find(x => x.id === id);
-            if(v) { v.likes++; simpanDB(); renderFeed(); }
-        }
-        function shareVid(id) {
-            // Membuat link pintar yang otomatis menyambung ke website
-            let link = window.location.href.split('?')[0] + "?play=" + id;
-            prompt("Salin link ini untuk share (Akan otomatis membuka video di web ini):", link);
+        function closePlayer() {
+            document.getElementById('monitor').style.display = 'none';
+            document.getElementById('v-player').pause();
         }
 
-        function simpanDB() {
-            localStorage.setItem('ghand_users', JSON.stringify(dbUsers));
-            localStorage.setItem('ghand_vids', JSON.stringify(dbVids));
-        }
-
-        // AUTO-PLAY JIKA ADA LINK SHARE DIBUKA
-        window.onload = () => {
-            let params = new URLSearchParams(window.location.search);
-            if(params.has('play')) {
-                let v = dbVids.find(x => x.id == params.get('play'));
-                if(v) setTimeout(() => putar(v.data, v.title), 1000);
-            }
+        function search() {
+            loadVideos(document.getElementById('find-vid').value);
         }
     </script>
 </body>
