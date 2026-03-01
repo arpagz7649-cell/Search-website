@@ -1,11 +1,13 @@
 [
   {
-    "tipe": "status",
-    "isi": "Radar Aktif. Menunggu perintah dari Pilot..."
+    "tipe": "video",
+    "judul": "Proyek Alpha",
+    "id_short": "ID_YOUTUBE_ASLI",
+    "kode_rahasia": "wwwy123"
   },
   {
-    "tipe": "video",
-    "judul": "Eksperimen 1",
-    "id_short": "TULIS_ID_YOUTUBE_DI_SINI"
+    "tipe": "status",
+    "isi": "Data rahasia negara telah dienkripsi.",
+    "kode_rahasia": "data99"
   }
 ]
