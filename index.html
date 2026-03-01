@@ -1,29 +1,13 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini YouTube & Radar Status</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<div id="pintu-pilihan" class="hidden">
+    <h2>Halo, apa yang mau kamu lakukan?</h2>
+    <button onclick="pindahKe('nonton')">Saya Mau Nonton</button>
+    <button onclick="pindahKe('upload')">Saya Mau Upload</button>
+</div>
 
-    <div id="app">
-        <header id="menu-user">
-            <div id="user-info">
-                <span>Halo, Tamu!</span>
-                <button onclick="tampilForm()">Daftar / Register</button>
-            </div>
-            
-            <div id="form-register" class="hidden">
-                <input type="text" id="input-nama" placeholder="Ketik nama kamu...">
-                <button onclick="daftar()">Simpan Nama</button>
-            </div>
-        </header>
-
-        <main id="konten-utama"></main>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+<div id="form-upload" class="hidden">
+    <h3>Upload Video Baru</h3>
+    <input type="text" id="up-judul" placeholder="Judul Video">
+    <input type="text" id="up-id" placeholder="ID YouTube Shorts">
+    <input type="text" id="up-kode" placeholder="Buat Kode Rahasia (Contoh: .wwwy1)">
+    <button onclick="prosesUpload()">Terbitkan Video!</button>
+</div>
