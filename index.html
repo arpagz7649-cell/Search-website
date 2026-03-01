@@ -1,119 +1,213 @@
-    <script>
-        // 1. MEMBANGUN BRANKAS (LOCAL STORAGE)
-        // Ini yang bikin data tidak hilang walau di-refresh 1000 kali!
-        let databasePilot = JSON.parse(localStorage.getItem('deadhand_users')) || [];
-        let brankasVideo = JSON.parse(localStorage.getItem('deadhand_videos')) || [];
-        let sesiAktif = null;
-
-        // FUNGSI GANTI LAYAR
-        function gantiLayar(targetId) {
-            document.getElementById('layar-register').classList.add('hidden');
-            document.getElementById('layar-login').classList.add('hidden');
-            document.getElementById('layar-radar').classList.add('hidden');
-            document.getElementById(targetId).classList.remove('hidden');
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEAD HAND - MINIMALIST RADAR</title>
+    <style>
+        /* TEMA GELAP TOTAL - MINIMALIS SAKTI */
+        body {
+            background-color: #000000; /* Hitam pekat agar tidak putih doang */
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
-        // 2. MANTRA BUAT IDENTITAS (REGISTER)
-        function jalankanRegister() {
+        /* EFEK TEKS MERAH MENYALA SEPERTI FOTO */
+        .brand {
+            color: #ff0000;
+            font-size: 45px;
+            font-weight: bold;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        }
+
+        .sub-brand {
+            color: #888;
+            font-size: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        /* CONTAINER FORM RAPI */
+        .container {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* DESAIN INPUT MINIMALIS */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-left: 2px;
+        }
+
+        input {
+            background-color: transparent;
+            border: 1px solid #222;
+            border-bottom: 2px solid #ff0000;
+            color: white;
+            padding: 12px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border: 1px solid #444;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
+        }
+
+        /* TOMBOL MERAH SANGAR */
+        .btn-main {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-main:hover {
+            background-color: #cc0000;
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #ff0000;
+            border: 1px solid #ff0000;
+            padding: 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* TEKS BAWAH */
+        .footer-note {
+            margin-top: 40px;
+            color: #333;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="brand">DEAD HAND</div>
+    <div class="sub-brand">3D CAPSA ROULETTE SYSTEM</div>
+
+    <div class="container" id="box-register">
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="reg-user" placeholder="Nama Akun...">
+        </div>
+
+        <div class="input-group">
+            <label>Nama Asli</label>
+            <input type="text" id="reg-asli" placeholder="Nama Lengkap Anda...">
+        </div>
+
+        <div class="input-group">
+            <label>Password (Wajib Dijawab)</label>
+            <input type="password" id="reg-pass" placeholder="Kunci Rahasia...">
+        </div>
+
+        <div class="input-group">
+            <label>Email (Terserah Mau Isi Atau Tidak)</label>
+            <input type="email" id="reg-email" placeholder="Email Opsional...">
+        </div>
+
+        <button class="btn-main" onclick="simpanKeBrankas()">BUAT RUANGAN</button>
+        <button class="btn-outline" onclick="pindahKeLogin()">GABUNG RUANGAN</button>
+        
+        <div class="footer-note">Siapkan mentalmu...</div>
+    </div>
+
+    <div class="container hidden" id="box-login">
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="login-user">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="login-pass">
+        </div>
+        <button class="btn-main" onclick="masukSistem()">MASUK KE RADAR</button>
+        <button class="btn-outline" onclick="location.reload()">KEMBALI</button>
+    </div>
+
+    <script>
+        // Mengambil data lama agar tetap ingat walau di-refresh
+        let database = JSON.parse(localStorage.getItem('brankas_pilot')) || [];
+
+        function simpanKeBrankas() {
             let user = document.getElementById('reg-user').value;
             let asli = document.getElementById('reg-asli').value;
             let pass = document.getElementById('reg-pass').value;
-            let email = document.getElementById('reg-email').value; // Opsional
+            let mail = document.getElementById('reg-email').value;
 
-            if(!user || !asli || !pass) {
-                alert("[SISTEM MENOLAK] Identitas Wajib (Username, Nama, Password) harus diisi!");
-                return;
-            }
-
-            // Cek kalau username sudah dipakai
-            let cekUser = databasePilot.find(p => p.username === user);
-            if(cekUser) {
-                alert("[ERROR] Username sudah terdaftar di database radar!");
-                return;
-            }
-
-            // Masukkan ke Brankas
-            databasePilot.push({
-                username: user,
-                namaAsli: asli,
-                password: pass,
-                email: email
-            });
-
-            // Kunci Brankas Permanen
-            localStorage.setItem('deadhand_users', JSON.stringify(databasePilot));
-            
-            alert("IDENTITAS TEREKAM DI BRANKAS PERMANEN!");
-            gantiLayar('layar-login'); // Lempar ke halaman login
-        }
-
-        // 3. MANTRA LOGIN (PINTU MASUK)
-        function jalankanLogin() {
-            let user = document.getElementById('login-user').value;
-            let pass = document.getElementById('login-pass').value;
-
-            // Cari di brankas, ada nggak yang cocok username & passwordnya?
-            let akun = databasePilot.find(p => p.username === user && p.password === pass);
-
-            if(akun) {
-                sesiAktif = akun; // Ingat siapa yang lagi login
-                document.getElementById('sapaan-pilot').innerText = "Pilot Aktif: " + akun.namaAsli;
-                gantiLayar('layar-radar');
-                
-                // MUNCULKAN VIDEO MASA LALU
-                tampilkanVideoLama(); 
-            } else {
-                alert("[FATAL] Akses Ditolak! Identitas atau Kunci salah.");
-            }
-        }
-
-        // ==========================================
-        // SISTEM MEMORI VIDEO PERMANEN
-        // ==========================================
-        
-        function uploadVideoBaru() {
-            let judulVideo = prompt("Masukkan Nama/Judul Data Video:");
-            let linkVideo = prompt("Masukkan Link Video (Contoh: link YouTube atau file mp4):");
-
-            if(linkVideo && judulVideo) {
-                // Simpan ke brankas video
-                brankasVideo.push({
-                    pemilik: sesiAktif.username, // Tandai ini video milik siapa
-                    judul: judulVideo,
-                    link: linkVideo,
-                    waktu: new Date().toLocaleString()
+            if(user && asli && pass) {
+                database.push({
+                    username: user,
+                    namaAsli: asli,
+                    password: pass,
+                    email: mail
                 });
-
-                // Kunci Brankas Permanen
-                localStorage.setItem('deadhand_videos', JSON.stringify(brankasVideo));
-                
-                // Langsung munculkan di layar
-                tampilkanVideoLama(); 
+                localStorage.setItem('brankas_pilot', JSON.stringify(database));
+                alert("Identitas Terkunci di Brankas!");
+                pindahKeLogin();
+            } else {
+                alert("Username, Nama Asli, dan Password HARUS dijawab!");
             }
         }
 
-        function tampilkanVideoLama() {
-            let wadah = document.getElementById('wadah-memori-video');
-            wadah.innerHTML = ""; // Bersihkan layar dulu
+        function pindahKeLogin() {
+            document.getElementById('box-register').classList.add('hidden');
+            document.getElementById('box-login').classList.remove('hidden');
+        }
 
-            // Filter: Hanya tampilkan video milik akun yang sedang login ini
-            let videoKu = brankasVideo.filter(v => v.pemilik === sesiAktif.username);
+        function masukSistem() {
+            let u = document.getElementById('login-user').value;
+            let p = document.getElementById('login-pass').value;
+            let ketemu = database.find(x => x.username === u && x.password === p);
 
-            if(videoKu.length === 0) {
-                wadah.innerHTML = "<p style='color:#555; font-style:italic;'>[Memori Kosong. Belum ada data video yang tersimpan.]</p>";
-                return;
+            if(ketemu) {
+                alert("Selamat Datang Pilot " + ketemu.namaAsli);
+                // Di sini nanti kita panggil fungsi memori video lama kamu
+            } else {
+                alert("Akses Ditolak!");
             }
-
-            // Panggil memori dari masa lalu satu per satu
-            videoKu.forEach(vid => {
-                wadah.innerHTML += `
-                    <div class="video-card" style="border: 1px solid #333; border-left: 4px solid #ff0000; padding: 15px; margin-bottom: 15px; background: rgba(10,10,10,0.8);">
-                        <h3 style="color:#fff; font-size: 16px; margin-bottom: 5px;">${vid.judul}</h3>
-                        <p style="color:#888; font-size: 11px; margin-bottom: 15px;">Diunggah: ${vid.waktu}</p>
-                        <a href="${vid.link}" target="_blank" style="color:#ff0000; text-decoration:none; border:1px solid #ff0000; padding:8px 12px; font-size:12px; text-transform:uppercase;">Putar Video</a>
-                    </div>
-                `;
-            });
         }
     </script>
-    
+
+</body>
+</html>
