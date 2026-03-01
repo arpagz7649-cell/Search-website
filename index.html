@@ -3,136 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEAD HAND - PRO UPGRADE</title>
+    <title>DEAD HAND - RADAR YT SYSTEM</title>
     <style>
-        /* TEMA DASAR HITAM */
-        :root { --utama: #ff0000; --aksen: #8000ff; } /* Default Merah & Ungu */
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        :root { --utama: #ff0000; --ungu: #8000ff; --bg: #000000; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; }
 
         /* HEADER & AVATAR */
-        .header-radar { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid #222; }
-        .avatar { width: 50px; height: 50px; background: var(--utama); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #000; box-shadow: 0 0 15px var(--utama); }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #111; sticky; top: 0; background: var(--bg); z-index: 100; }
+        .pilot-info { display: flex; align-items: center; gap: 12px; }
+        .avatar-circle { width: 40px; height: 40px; background: var(--utama); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px var(--utama); }
 
-        /* FORM STYLING */
-        .layar { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; }
-        .box-input { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
-        input { background: #111; border: 1px solid #333; border-bottom: 2px solid var(--utama); color: #fff; padding: 12px; outline: none; }
-        button { background: var(--utama); color: #fff; border: none; padding: 15px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        /* IKON WARNA UNGU DI ATAS (NAVI) */
+        .icon-bar { display: flex; gap: 12px; padding: 15px 20px; overflow-x: auto; background: #050505; border-bottom: 1px solid #222; }
+        .nav-icon { min-width: 45px; height: 45px; background: var(--ungu); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .nav-icon:hover { transform: scale(1.1); filter: brightness(1.2); }
 
-        /* GRID VIDEO UPGRADE */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 20px; width: 100%; }
-        .video-card { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; }
-        .video-card:hover { transform: translateY(-5px); border-color: var(--utama); }
-        .thumbnail-placeholder { width: 100%; height: 100px; background: var(--aksen); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        .video-info { padding: 10px; font-size: 13px; }
+        /* GRID VIDEO STYLE YT */
+        .section-title { padding: 20px 20px 10px; font-size: 18px; letter-spacing: 2px; color: var(--utama); font-weight: bold; }
+        
+        /* SHORTS GRID (VERTIKAL) */
+        .shorts-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; }
+        .short-card { min-width: 140px; height: 220px; background: #111; border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid #222; }
+        .short-thumb { width: 100%; height: 100%; object-fit: cover; background: linear-gradient(to bottom, #222, #000); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #444; }
+        .short-label { position: absolute; bottom: 8px; left: 8px; font-size: 11px; font-weight: bold; text-shadow: 1px 1px 2px #000; }
 
-        /* PANEL CUSTOM WARNA */
-        .color-panel { padding: 20px; background: #0a0a0a; border: 1px solid #222; margin: 20px; border-radius: 10px; }
+        /* VIDEO BIASA GRID (HORIZONTAL) */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        .video-card { width: 100%; cursor: pointer; }
+        .video-thumb { width: 100%; aspect-ratio: 16/9; background: #111; border-radius: 12px; margin-bottom: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #222; }
+        .video-meta { display: flex; gap: 12px; }
+        .meta-text b { display: block; font-size: 14px; margin-bottom: 4px; }
+        .meta-text span { font-size: 12px; color: #888; }
+
+        /* FORM DAFTAR */
+        .screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .box { width: 300px; display: flex; flex-direction: column; gap: 15px; }
+        input { background: #0a0a0a; border: 1px solid #333; border-bottom: 2px solid var(--utama); color: #fff; padding: 12px; outline: none; }
+        button.btn-red { background: var(--utama); color: #fff; border: none; padding: 15px; cursor: pointer; font-weight: bold; letter-spacing: 2px; }
+
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="layar-reg" class="layar">
-        <h1 style="color: var(--utama); letter-spacing: 10px;">DEAD HAND</h1>
-        <div class="box-input">
-            <input type="text" id="reg-user" placeholder="Username">
-            <input type="text" id="reg-asli" placeholder="Nama Asli">
-            <input type="password" id="reg-pass" placeholder="Password (Wajib)">
-            <input type="email" id="reg-email" placeholder="Email (Opsional)">
-            <button onclick="prosesDaftar()">INISIALISASI & MASUK</button>
+    <div id="screen-reg" class="screen">
+        <h1 style="color:var(--utama); letter-spacing:10px; margin-bottom:5px;">DEAD HAND</h1>
+        <p style="font-size:10px; color:#444; margin-bottom:30px;">RADAR INITIALIZATION SYSTEM</p>
+        <div class="box">
+            <input type="text" id="reg-u" placeholder="Username">
+            <input type="text" id="reg-n" placeholder="Nama Asli">
+            <input type="password" id="reg-p" placeholder="Password (Wajib)">
+            <input type="email" id="reg-e" placeholder="Email (Opsional)">
+            <button class="btn-red" onclick="prosesDaftar()">AKTIFKAN RADAR</button>
         </div>
     </div>
 
-    <div id="layar-radar" class="hidden">
-        <div class="header-radar">
-            <div>
-                <h2 id="judul-pilot" style="margin:0; font-size: 18px;">PILOT: -</h2>
-                <small style="color: #555;">SISTEM RADAR AKTIF</small>
+    <div id="screen-radar" class="hidden">
+        <div class="header">
+            <div class="pilot-info">
+                <div id="avatar" class="avatar-circle">?</div>
+                <b id="display-name" style="font-size: 14px;">PILOT</b>
             </div>
-            <div id="user-avatar" class="avatar">?</div>
+            <button onclick="uploadFile()" style="background:none; border:1px solid #333; color:#fff; padding:5px 10px; font-size:11px; cursor:pointer;">+ UPLOAD</button>
         </div>
 
-        <div class="color-panel">
-            <label style="font-size: 12px; color: #888;">CUSTOM TEMA WARNA:</label>
-            <input type="color" id="color-picker" onchange="gantiWarna(this.value)" value="#ff0000">
-        </div>
+        <div id="nav-icons" class="icon-bar">
+            </div>
 
-        <div style="padding: 0 20px;">
-            <button onclick="uploadBaru()" style="width: 100%; border-radius: 5px;">+ UPLOAD DATA VIDEO</button>
-        </div>
+        <div class="section-title">SHORTS</div>
+        <div id="list-shorts" class="shorts-container">
+            </div>
 
+        <div class="section-title">VIDEO RECENT</div>
         <div id="list-video" class="video-grid">
             </div>
     </div>
 
     <script>
-        let dbUser = JSON.parse(localStorage.getItem('deadhand_pro_users')) || [];
-        let dbVideo = JSON.parse(localStorage.getItem('deadhand_pro_vids')) || [];
-        let userSekarang = null;
+        // BRANKAS PERMANEN
+        let dbUser = JSON.parse(localStorage.getItem('dh_yt_users')) || [];
+        let dbVid = JSON.parse(localStorage.getItem('dh_yt_vids')) || [];
+        let pilot = null;
 
-        // 1. AUTO-LOGIN SETELAH DAFTAR
         function prosesDaftar() {
-            let u = document.getElementById('reg-user').value;
-            let n = document.getElementById('reg-asli').value;
-            let p = document.getElementById('reg-pass').value;
-            let e = document.getElementById('reg-email').value;
-
+            let u = document.getElementById('reg-u').value;
+            let n = document.getElementById('reg-n').value;
+            let p = document.getElementById('reg-p').value;
             if(u && n && p) {
-                let data = { username: u, nama: n, pass: p, email: e, warna: '#ff0000' };
-                dbUser.push(data);
-                localStorage.setItem('deadhand_pro_users', JSON.stringify(dbUser));
-                
-                // LANGSUNG MASUK (AUTO-LOGIN)
-                masukSistem(data);
-            } else { alert("Lengkapi data!"); }
-        }
-
-        function masukSistem(data) {
-            userSekarang = data;
-            document.getElementById('layar-reg').classList.add('hidden');
-            document.getElementById('layar-radar').classList.remove('hidden');
-            
-            // SET NAMA & AVATAR (HURUF DEPAN)
-            document.getElementById('judul-pilot').innerText = "PILOT: " + data.nama.toUpperCase();
-            document.getElementById('user-avatar').innerText = data.nama.charAt(0).toUpperCase();
-            
-            muatVideo();
-        }
-
-        // 2. CUSTOM WARNA
-        function gantiWarna(warna) {
-            document.documentElement.style.setProperty('--utama', warna);
-            document.getElementById('user-avatar').style.boxShadow = `0 0 15px ${warna}`;
-        }
-
-        // 3. UPLOAD & MEMORI VIDEO
-        function uploadBaru() {
-            let j = prompt("Judul Video:");
-            let l = prompt("Link Video (URL):");
-            if(j && l) {
-                dbVideo.push({ pemilik: userSekarang.username, judul: j, link: l });
-                localStorage.setItem('deadhand_pro_vids', JSON.stringify(dbVideo));
-                muatVideo();
+                pilot = { user: u, nama: n };
+                dbUser.push(pilot);
+                localStorage.setItem('dh_yt_users', JSON.stringify(dbUser));
+                initRadar();
             }
         }
 
-        function muatVideo() {
-            let wadah = document.getElementById('list-video');
-            wadah.innerHTML = "";
-            let filtered = dbVideo.filter(v => v.pemilik === userSekarang.username);
+        function initRadar() {
+            document.getElementById('screen-reg').classList.add('hidden');
+            document.getElementById('screen-radar').classList.remove('hidden');
+            document.getElementById('display-name').innerText = pilot.nama.toUpperCase();
+            document.getElementById('avatar').innerText = pilot.nama.charAt(0).toUpperCase();
+            renderAll();
+        }
 
-            filtered.forEach(v => {
-                wadah.innerHTML += `
-                    <div class="video-card" onclick="window.open('${v.link}', '_blank')">
-                        <div class="thumbnail-placeholder">${v.judul.charAt(0).toUpperCase()}</div>
-                        <div class="video-info">
-                            <b>${v.judul}</b><br>
-                            <small style="color:var(--utama)">KLIK UNTUK NONTON</small>
-                        </div>
-                    </div>
-                `;
+        function uploadFile() {
+            let judul = prompt("Judul Video:");
+            let tipe = confirm("Klik OKE untuk VIDEO BIASA, Klik BATAL untuk SHORTS");
+            let input = document.createElement('input');
+            input.type = 'file'; input.accept = 'video/*';
+            input.onchange = e => {
+                let file = e.target.files[0];
+                let reader = new FileReader();
+                reader.onload = function() {
+                    dbVid.push({
+                        owner: pilot.user,
+                        judul: judul,
+                        data: reader.result,
+                        isShort: !tipe, // True jika Shorts
+                        date: new Date().toLocaleDateString()
+                    });
+                    localStorage.setItem('dh_yt_vids', JSON.stringify(dbVid));
+                    renderAll();
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        function renderAll() {
+            const myVids = dbVid.filter(v => v.owner === pilot.user);
+            const nav = document.getElementById('nav-icons');
+            const shorts = document.getElementById('list-shorts');
+            const videos = document.getElementById('list-video');
+            
+            nav.innerHTML = ""; shorts.innerHTML = ""; videos.innerHTML = "";
+
+            myVids.forEach(v => {
+                // 1. Render Ikon Ungu di Atas
+                nav.innerHTML += `<div class="nav-icon" onclick="putar('${v.data}')">${v.judul.charAt(0)}</div>`;
+
+                if(v.isShort) {
+                    // 2. Render Shorts Style
+                    shorts.innerHTML += `
+                        <div class="short-card" onclick="putar('${v.data}')">
+                            <div class="short-thumb">DATA_STREAM</div>
+                            <div class="short-label">${v.judul}</div>
+                        </div>`;
+                } else {
+                    // 3. Render Video Biasa Style
+                    videos.innerHTML += `
+                        <div class="video-card" onclick="putar('${v.data}')">
+                            <div class="video-thumb">VIDEO_SIGNAL</div>
+                            <div class="video-meta">
+                                <div class="avatar-circle" style="width:30px; height:30px; font-size:12px;">${pilot.nama.charAt(0)}</div>
+                                <div class="meta-text">
+                                    <b>${v.judul}</b>
+                                    <span>Pilot ${pilot.nama} • ${v.date}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                }
             });
+        }
+
+        function putar(src) {
+            let win = window.open("");
+            win.document.write(`<body style="background:#000;margin:0;display:flex;align-items:center;justify-content:center;"><video src="${src}" controls autoplay style="max-width:100%;max-height:100vh;"></video></body>`);
         }
     </script>
 </body>
