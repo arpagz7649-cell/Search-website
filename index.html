@@ -1,12 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Mini YouTube Shorts Saya</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini YouTube & Radar Status</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 style="text-align:center">Radar Konten 2D</h1>
-    <div id="wadah-konten"></div>
+
+    <div id="app">
+        <header id="menu-user">
+            <div id="user-info">
+                <span>Halo, Tamu!</span>
+                <button onclick="tampilForm()">Daftar / Register</button>
+            </div>
+            
+            <div id="form-register" class="hidden">
+                <input type="text" id="input-nama" placeholder="Ketik nama kamu...">
+                <button onclick="daftar()">Simpan Nama</button>
+            </div>
+        </header>
+
+        <main id="konten-utama"></main>
+    </div>
 
     <script src="script.js"></script>
 </body>
