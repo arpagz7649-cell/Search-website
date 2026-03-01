@@ -1,174 +1,83 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Video (Versi Scroll)</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+<div id="app-container">
 
-    <style>
-        body { background: #111; color: white; font-family: sans-serif; text-align: center; margin-top: 20px; margin-bottom: 50px;}
-        .layar { display: none; padding: 10px; }
-        .layar-aktif { display: block; }
-        input { padding: 10px; width: 80%; max-width: 300px; margin: 10px 0; border-radius: 5px; border: none; }
-        button { padding: 12px 20px; background: #0088ff; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; font-weight: bold;}
-        .kode-box { background: #333; padding: 10px; color: #00ff00; font-family: monospace; border-radius: 5px; margin-top: 15px; }
-
-        /* --- BAJU BARU BUAT FEED SCROLL (KAYAK SHORTS) --- */
-        #wadah-feed {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px; /* Jarak antar video pas di-scroll */
-            margin-top: 20px;
-        }
-        .video-item {
-            background: #222;
-            padding: 15px;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 350px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-        }
-        .video-item h3 { margin: 0 0 10px 0; font-size: 18px; color: #fff; text-align: left;}
-        .video-item span { font-size: 12px; color: #00ff00; background: #111; padding: 3px 8px; border-radius: 3px;}
-        .video-item video { width: 100%; border-radius: 10px; background: #000; }
-    </style>
-</head>
-<body>
-
-    <div id="layar-1" class="layar layar-aktif">
-        <h1>LOGIN SISTEM</h1>
-        <input type="text" id="input-nama" placeholder="Ketik Nama Kamu...">
-        <br>
-        <button onclick="masukSistem()">MASUK</button>
-    </div>
-
-    <div id="layar-2" class="layar">
-        <h2 id="sapaan-pilot">Halo!</h2>
-        <button onclick="bukaMenu('layar-nonton')">Lihat Semua Video (Scroll)</button>
-        <button onclick="bukaMenu('layar-upload')" style="background: #ffaa00;">Upload Video Baru</button>
-    </div>
-
-    <div id="layar-upload" class="layar">
-        <h2>Upload ke Brankas</h2>
-        <input type="file" id="file-internal" accept="video/*">
-        <br>
-        <input type="text" id="judul-video" placeholder="Judul Video...">
-        <br>
-        <button onclick="prosesUpload()">Simpan Video</button>
-        <button onclick="bukaMenu('layar-2')" style="background: #555;">Kembali</button>
-        <div id="hasil-upload" class="kode-box" style="display: none;"></div>
-    </div>
-
-    <div id="layar-nonton" class="layar">
-        <button onclick="bukaMenu('layar-2')" style="background: #555; position: sticky; top: 10px; z-index: 100;">Kembali ke Menu</button>
-        <h2 id="judul-nonton">Memuat Feed...</h2>
-        
-        <div id="wadah-feed"></div>
-    </div>
-
-    <script>
-        let databaseVideo = [];
-
-        // 1. Cek Memori Pas Buka Web
-        async function cekMemori() {
-            let dataLama = await localforage.getItem('db_video');
-            if (dataLama) {
-                databaseVideo = dataLama;
-            }
-            let namaLama = localStorage.getItem('nama_pilot');
-            if(namaLama) {
-                document.getElementById('input-nama').value = namaLama;
-            }
-        }
-        cekMemori();
-
-        // 2. Navigasi
-        function bukaMenu(idLayar) {
-            document.querySelectorAll('.layar').forEach(el => el.classList.remove('layar-aktif'));
-            document.getElementById(idLayar).classList.add('layar-aktif');
+    <section id="auth-section">
+        <div id="layar-register" class="layar-box">
+            <header>
+                <h1>CENTRAL COMMAND</h1>
+                <p>Registrasi Identitas Pilot Baru</p>
+            </header>
             
-            // Kalau buka menu nonton, langsung susun semua video
-            if (idLayar === 'layar-nonton') {
-                tampilkanSemuaVideo();
-            }
-        }
-
-        function masukSistem() {
-            let nama = document.getElementById('input-nama').value;
-            if (nama !== "") {
-                localStorage.setItem('nama_pilot', nama);
-                document.getElementById('sapaan-pilot').innerText = "Pilot " + nama + " Aktif!";
-                bukaMenu('layar-2');
-            } else {
-                alert("Masukkan nama dulu!");
-            }
-        }
-
-        // 3. Upload & Masukin Brankas
-        async function prosesUpload() {
-            let fileVideo = document.getElementById('file-internal').files[0];
-            let judul = document.getElementById('judul-video').value;
-
-            if (fileVideo && judul) {
-                let kodeUnik = "v-" + Math.random().toString(16).slice(2, 6);
-
-                databaseVideo.push({
-                    judul: judul,
-                    kode: kodeUnik,
-                    file_asli: fileVideo
-                });
-
-                await localforage.setItem('db_video', databaseVideo);
-
-                let hasil = document.getElementById('hasil-upload');
-                hasil.style.display = "block";
-                hasil.innerHTML = `Berhasil! <br> Kode: <b>${kodeUnik}</b>`;
+            <div class="form-container">
+                <label>Username Identitas:</label>
+                <input type="text" id="reg-user" placeholder="Contoh: Pilot_Alpha">
                 
-                document.getElementById('judul-video').value = "";
-                alert("Upload berhasil! Masuk ke menu nonton untuk melihat videonya.");
-            } else {
-                alert("Pilih file video dan isi judul!");
-            }
-        }
-
-        // 4. MANTRA BARU: Susun Semua Video ke Bawah (Scrollable)
-        function tampilkanSemuaVideo() {
-            let wadah = document.getElementById('wadah-feed');
-            let teksJudul = document.getElementById('judul-nonton');
-            
-            // Bersihkan wadah dulu biar gak numpuk ganda
-            wadah.innerHTML = ""; 
-
-            if (databaseVideo.length > 0) {
-                teksJudul.innerText = `Ada ${databaseVideo.length} Video di Radar`;
+                <label>Nama Asli (Pribadi):</label>
+                <input type="text" id="reg-asli" placeholder="Masukkan Nama Lengkap Anda">
                 
-                // Looping dari belakang ke depan (biar video terbaru ada di paling atas)
-                for (let i = databaseVideo.length - 1; i >= 0; i--) {
-                    let vid = databaseVideo[i];
-                    
-                    // Ubah file mentah jadi link yang bisa diputar
-                    let urlVideo = URL.createObjectURL(vid.file_asli);
-                    
-                    // Buat kotak videonya
-                    let kotakVideo = `
-                        <div class="video-item">
-                            <h3>${vid.judul} <span>Kode: ${vid.kode}</span></h3>
-                            <video src="${urlVideo}" controls preload="metadata"></video>
-                        </div>
-                    `;
-                    
-                    // Masukkan ke dalam wadah feed
-                    wadah.innerHTML += kotakVideo;
-                }
-            } else {
-                teksJudul.innerText = "Sistem Masih Kosong!";
-                alert("Belum ada video sama sekali. Ayo upload dulu!");
-                bukaMenu('layar-2');
-            }
-        }
-    </script>
-</body>
-</html>
+                <label>Password Utama (Enkripsi Gelombang):</label>
+                <input type="password" id="reg-pass" placeholder="Kunci Utama Akses">
+                
+                <div class="opsional-box">
+                    <h3>PROTEKSI TAMBAHAN (OPSIONAL)</h3>
+                    <p>Aktifkan jika ingin lapisan keamanan email kedua.</p>
+                    <input type="password" id="reg-email-pass" placeholder="Password Email (Kosongkan jika tidak perlu)">
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn-primary" onclick="simpanAkun()">DAFTARKAN IDENTITAS</button>
+                    <button class="btn-link" onclick="pindahLayar('layar-login')">Sudah terdaftar? Login di sini</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="layar-login" class="layar-box hidden">
+            <header>
+                <h1>IDENTIFICATION REQUIRED</h1>
+                <p>Masukkan kunci untuk mengakses Radar</p>
+            </header>
+
+            <div class="form-container">
+                <input type="text" id="login-user" placeholder="Username Akun">
+                <input type="password" id="login-pass" placeholder="Password Utama">
+                
+                <div id="box-email-ekstra" class="hidden">
+                    <div class="warning-alert">
+                        <span>Peringatan: Akun ini menggunakan proteksi lapis dua!</span>
+                    </div>
+                    <input type="password" id="login-email-pass" placeholder="Masukkan Password Email">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-success" onclick="verifikasiLogin()">VERIFIKASI AKSES</button>
+                    <button class="btn-link" onclick="pindahLayar('layar-register')">Belum punya akun? Buat Baru</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="layar-dashboard" class="layar-box hidden">
+        <nav class="top-nav">
+            <div class="user-info">
+                <span id="label-status">STATUS: ONLINE</span>
+                <h2 id="teks-selamat-datang">Welcome, Pilot</h2>
+            </div>
+            <button class="btn-danger" onclick="logout()">TERMINATE SESSION</button>
+        </nav>
+
+        <main class="dashboard-content">
+            <div class="profile-card">
+                <h3>Informasi Pilot</h3>
+                <p><strong>Username:</strong> <span id="display-user">-</span></p>
+                <p><strong>Nama Asli:</strong> <span id="display-nama">-</span></p>
+                <p><strong>Status Proteksi:</strong> <span id="display-proteksi">-</span></p>
+            </div>
+
+            <div class="action-grid">
+                <button onclick="bukaFitur('nonton')">BUKA RADAR VIDEO</button>
+                <button onclick="bukaFitur('upload')">UPLOAD DATA INTERNAL</button>
+                <button onclick="bukaFitur('settings')">KONFIGURASI SISTEM</button>
+            </div>
+        </main>
+    </section>
+
+</div>
